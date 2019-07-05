@@ -1,7 +1,7 @@
 <template>
     <div id="flowDesign">
         <iframe
-            src="static/flowable-modeler/index.html"
+            src="static/modler/index.html"
             frameborder="0"
             width="100%"
             height="1000px">
@@ -37,6 +37,7 @@ export default {
                 type: 'error',
                 message: '请先保存表单模型' 
             });
+            // this.$router.push({ path: '/form/formDesign' })
         }
     },
     // mounted: function() {

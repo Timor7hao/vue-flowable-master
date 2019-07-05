@@ -16,7 +16,7 @@
                             <el-dropdown-item>报表配置到移动端首页</el-dropdown-item>
                             <el-dropdown-item>发布到钉钉工作台</el-dropdown-item>
                             <el-dropdown-item>发布给其他企业</el-dropdown-item>
-                            <el-dropdown-item>删除</el-dropdown-item>
+                            <el-dropdown-item @click.native="deleteApp(item.id)">删除</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </el-menu-item>
@@ -57,42 +57,18 @@
         <el-main>
             <span>{{title}}</span>
             <div class="buttongroup">
-                <el-button @click="addform(title)"><i class="el-icon-plus"></i>表单</el-button>
+                <el-button @click="addform(title,id)"><i class="el-icon-plus"></i>表单</el-button>
                 <el-button><i class="el-icon-plus"></i>报表</el-button>
                 <el-button style="margin-left:20px;"><i class="el-icon-plus"></i>分组</el-button>
             </div>
             <div class="formcard" v-for="(item, index) in formlist" :key="index">
-                <el-card @click.native="addform(title,item.modelJson)">
+                <el-card @click.native="addform(title,id,item.formName,item.id,item.modelJson)">
                     <svg-icon v-rainbow icon-class="icon-Financial_025"/>&nbsp;
                     <!-- <svg-icon :icon-class="item.iconCls"/> -->
                     {{item.formName}}
                 </el-card>
             </div>
-            <!-- <div>
-                <el-button type="primary" @click="addform()">添加表单</el-button>
-                <el-button type="primary">添加报表</el-button>
-            </div> -->
-            <!-- <div  v-for="(item, index) in formList" class="formcard" :key="index">
-                <span> {{item.formname}} </span>
-            </div> -->
         </el-main>
-        <!-- 对话框 -->
-        <!-- <el-dialog title="添加应用" :visible.sync="dialogVisible" width="30%">
-        <el-input
-            v-model="newappname"
-            placeholder="请输入应用名称"
-            clearable>
-        </el-input>
-        <span
-            slot="footer"
-            class="dialog-footer">
-            <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button
-            type="primary"
-            @click="newapp()"
-            >确 定</el-button>
-        </span>
-        </el-dialog> -->
     </el-container>
 </template>
 
@@ -101,6 +77,7 @@ import { options } from '@/icons/icon.json'
 // import {MakingForm} from 'form-making'
 // Vue.component(MakingForm.name, MakingForm)
 export default {
+    inject:['reload'],
     data() {
         return {
             //应用列表
@@ -111,11 +88,14 @@ export default {
             dialogVisible: false,
             appname: '',
             value: '',
+            appid: '',
             options: options,
             //右侧标题及内容
             title: '',
             id: '',
             formlist: [],
+            formName: '',
+            formid: '',
             //传每个表单所携带json
             formjson: {},
             key() {
@@ -148,7 +128,7 @@ export default {
             var Params = {}
             this.$ajax({
                 // url: '/dev-api/application/appList',
-                url:'/api/application/appList',
+                url:'/my-api/application/appList',
                 method: 'get',
                 contentType: "application/json; charset=utf-8",
                 params: Params
@@ -165,6 +145,8 @@ export default {
                     this.applist.push(obj)
                 }
                 console.log(this.applist)
+                if(this.appname && this.value)
+                    this.newAppSetting()
                 this.getAppFormList()
             }).catch( error => {
                 console.log()
@@ -176,32 +158,8 @@ export default {
             console.log(this.applist[this.activeKey])
             this.title = this.applist[this.activeKey].applicationName
             this.id = this.applist[this.activeKey].id
-            // console.log(this.applist[this.activeKey].path)
             console.log(this.title)
             console.log(this.id)
-            // var Params = {}
-            // this.$ajax({
-            //     url:'/dev-api/menu/form/menus/'+ this.applist[this.activeKey].path,
-            //     method: 'get',
-            //     contentType: "application/json; charset=utf-8",
-            //     params: Params
-            // }).then( res => {
-            //     this.formlist=[]
-            //     for(let i=0;i<res.data[0].children.length;i++)
-            //     {
-            //         let obj = {}
-            //         obj.id = res.data[0].children[i].id
-            //         obj.name = res.data[0].children[i].name
-            //         obj.iconCls = res.data[0].children[i].iconCls
-            //         obj.path = res.data[0].children[i].path
-            //         this.formlist.push(obj)
-            //     }
-            //     console.log(this.formlist)
-            // }).catch( error => {
-            // console.log()
-            // })
-
-
             var Params = {
                 app_id: this.id,
                 user_id: "test",
@@ -209,12 +167,11 @@ export default {
                 form_status: "-1"
             }
             this.$ajax({
-                url:'/api/form/models/get',
+                url:'/my-api/form/models/get',
                 method: 'get',
                 contentType: "application/json; charset=utf-8",
                 params: Params
             }).then( res => {
-                console.log(res.data.obj)
                 this.formlist=[]
                 for(let i=0;i<res.data.obj.length;i++)
                 {
@@ -232,20 +189,99 @@ export default {
                 console.log()
             })
         },
-        // handleClick(index) {
-        //     console.log(index);
-        // },
-        newapp() {
+        //1.输入完信息调用新建应用接口
+        newApp() {
             this.dialogVisible = false;
-            console.log(this.newappname);
-            this.appList.push({ appid: '004', appname: this.newappname });
-            this.newappname = '';
+            var Params = {
+                applicationName: this.appname,
+                iconCls: this.value
+            }
+            console.log(Params)
+            this.$ajax({
+                url:'/my-api/application/addApp',
+                method: 'post',
+                contentType: "application/json; charset=utf-8",
+                data: Params
+            }).then( res => {
+                this.$message({
+                    type: 'success',
+                    message: '新建应用成功' 
+                }); 
+                this.getAppList()
+            }).catch( error => {
+                this.$message({
+                    type: 'error',
+                    message: '新建任务失败' 
+                });
+                console.log()
+            })
         },
-        addform(title,formjson) {
+        //2.确定数据存储成功后调用 （将这个表单加在权限里）
+        newAppSetting() {
+            console.log(this.applist)
+            for(let i=0;i<this.applist.length;i++)
+            {
+                if(this.applist[i].applicationName == this.appname && this.applist[i].iconCls == this.value)
+                    this.appid = this.applist[i].id
+            }
+            var Params = {
+                applicationName: this.appname,
+                iconCls: this.value,
+                id: this.appid
+            }
+            console.log(Params)
+            this.$ajax({
+                url:'/dev-api/menu/app/add',
+                method: 'post',
+                contentType: "application/json; charset=utf-8",
+                data: Params
+            }).then( res => {
+                this.$message({
+                    type: 'success',
+                    message: '表单成功加在权限中' 
+                });
+            }).catch( error => {
+                this.$message({
+                    type: 'error',
+                    message: '表单加在权限中失败' 
+                });
+                console.log()
+            })
+            this.reload();
+        },
+        //删除应用
+        deleteApp(id) {
+            var Params = {
+                id: id
+            }
+            this.$ajax({
+                url:'/my-api/application/deleteApp',
+                method: 'delete',
+                contentType: "application/json; charset=utf-8",
+                data: Params
+            }).then( res => {
+                this.$message({
+                    type: 'success',
+                    message: '删除成功' 
+                });
+            }).catch( error => {
+                this.$message({
+                    type: 'error',
+                    message: '删除失败' 
+                });
+                console.log()
+            })
+            this.reload();
+        },
+        //跳转至添加表单
+        addform(title,id,formName,formid,formjson) {
             this.$router.push({ 
                 path: '/form',
                 query: {
                     apptitle:title,
+                    appid:id,
+                    formName:formName,
+                    formid:formid,
                     formjson:formjson,
                 }
             })

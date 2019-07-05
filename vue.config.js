@@ -37,45 +37,62 @@ module.exports = {
     proxy: {
       // change xxx-api/login => mock/login    localhost:8080/flowable-modeler
       // detail: https://cli.vuejs.org/config/#devserver-proxy
-      [process.env.VUE_APP_BASE_API]: {
-        // target: `http://localhost:${port}/mock`,
-        target: `http://10.1.18.178:${port}/`,
-        // target: `http://10.1.18.26:${port}`,
-        // target: 'http://120.77.179.239',
-        changeOrigin: true,
-        pathRewrite: {
-          ['^' + process.env.VUE_APP_BASE_API]: ''
-        }
-      },
-      '/flowable-modeler': {  
-        target: 'http://localhost:8080/', //源地址
-        // target: `http://10.1.18.26:9000/`, //源地址
-        changeOrigin: true, //改变源
-        // pathRewrite: {
-        //   '^/flowable-modeler': '' //路径重写
-        // }
-      },
-      '/api': {
+      // [process.env.VUE_APP_BASE_API]: {
+      //   // target: `http://localhost:${port}/mock`,
+      //   target: `http://10.1.18.178:${port}/`,
+      //   // target: `http://10.1.18.26:${port}`,
+      //   // target: 'http://120.77.179.239',
+      //   changeOrigin: true,
+      //   pathRewrite: {
+      //     ['^' + process.env.VUE_APP_BASE_API]: ''
+      //   }
+      // },
+      '/dev-api': {
+          target: `http://10.1.18.178:8083/`,
+          // target: 'http://10.1.18.206:8083',
+          // target:'http://localhost:8083/',
+          changeOrigin: true,
+          pathRewrite: {
+            '^/dev-api': '' //路径重写
+          }
+        },
+      '/my-api': {
         target: `http://10.1.18.178:9000/`, //源地址
         // target: 'http://localhost:9000/', //源地址
         changeOrigin: true, //改变源
         pathRewrite: {
-          '^/api': '' //路径重写
+          '^/my-api': '' //路径重写
         }
-      }
+      },
+      // 以下为flowable里的接口
+      
+      // '/api': {  
+      //   // target: 'http://localhost:8080/', //源地址
+      //   target: `http://10.1.18.178:9000/api`, //源地址
+      //   changeOrigin: true, //改变源
+      //   pathRewrite: {
+      //     '^/api': '' //路径重写
+      //   }
+      // },
+      '/app': {  
+        // target: 'http://localhost:9000/app', //源地址
+        target: `http://10.1.18.178:9000/app`, //源地址
+        changeOrigin: true, //改变源
+        pathRewrite: {
+          '^/app': '' //路径重写
+        }
+      },
+      '/modler': {  
+        // target: 'http://localhost:9000/', //源地址
+        target: `http://10.1.18.178:9000/`, //源地址
+        changeOrigin: true, //改变源
+        pathRewrite: {
+          '^/modler': '' //路径重写
+        }
+      },
     },
     after: require('./mock/mock-server.js')
   },
-  // css: {
-  //   loaderOptions: {
-  //       // 给 sass-loader 传递选项
-  //       sass: {
-  //           // @/ 是 src/ 的别名
-  //           // 所以这里假设你有 `src/assets/css/varuables.scss` 这个文件
-  //           data: `@import "@/styles/index.scss";`
-  //       }
-  //   }
-  // },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.

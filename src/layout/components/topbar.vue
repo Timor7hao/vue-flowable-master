@@ -14,7 +14,7 @@
             </template>
         </el-menu>
         <div class="right-tabs">
-            <div><span @click="toHome()">首页</span></div>
+            <div><span @click="toHome()">主页</span></div>
             <div class="vertical-divider"> </div>
             <div><span>模板中心</span></div>
             <div class="vertical-divider"> </div>
@@ -64,17 +64,17 @@ export default {
                     "keepAlive": null,
                     "requireAuth": true
                 },
-                // {
-                //     "id": 32,
-                //     "path": "/addressInfo",
-                //     "component": "Home",
-                //     "name": "场景管理",
-                //     "iconCls": "fa fa-bar-chart",
-                //     "children": [],
-                //     "meta": null,
-                //     "keepAlive": null,
-                //     "requireAuth": true
-                // },
+                {
+                    "id": 32,
+                    "path": "/addressInfo",
+                    "component": "Home",
+                    "name": "场景管理",
+                    "iconCls": "fa fa-bar-chart",
+                    "children": [],
+                    "meta": null,
+                    "keepAlive": null,
+                    "requireAuth": true
+                },
                 // {
                 //     "id": 33,
                 //     "path": "/peopleInfo",
@@ -104,7 +104,7 @@ export default {
             console.log(key, keyPath);
         },
         toHome() {
-            this.$router.push({ path: '/' })
+            this.$router.push({ path: '/home' })
         }
     }
 }

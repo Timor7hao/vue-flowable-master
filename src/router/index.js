@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import number from '@/views/home/MyFlow'
 
 Vue.use(Router)
+Vue.use(number)
 
 /* Layout */
 import Layout from '@/layout'
@@ -34,6 +36,39 @@ export const constantRoutes = [
     component: () =>import('@/views/home/AppInfomation'),
     hidden: true
   },
+  {
+    path: '/myflow',
+    component: () =>import('@/views/home/MyFlow'),
+    // redirect: '/myflow/waitdone',
+    name: 'myflow',
+    meta: { title: '我的流程', icon: 'table' },
+    children: [
+      {
+        path: 'waitdone',
+        name: 'waitdone',
+        component: () => import('@/views/home/MyFlowMethods/waitDone'),
+        meta: { title: '待办', icon: 'table'}
+      },
+      {
+        path: 'waitread',
+        name: 'waitread',
+        component: () => import('@/views/home/MyFlowMethods/waitRead'),
+        meta: { title: '待阅', icon: 'table'}
+      },
+      {
+        path: 'startedme',
+        name: 'startedme',
+        component: () => import('@/views/home/MyFlowMethods/startedMe'),
+        meta: { title: '我发起的', icon: 'table'}
+      },
+      {
+        path: 'wholeflow',
+        name: 'wholeflow',
+        component: () => import('@/views/home/MyFlowMethods/wholeFlow'),
+        meta: { title: '全部', icon: 'table'}
+      }
+    ]
+  },
   // {
   //   path: '/',
   //   component: Layout,
@@ -50,6 +85,16 @@ export const constantRoutes = [
     path: '/home',
     // redirect: '/home',
     component: () => import('@/views/home/index')
+  },
+  {
+    path: '/adminhome',
+    // redirect: '/home',
+    component: () => import('@/views/adminhome/index'),
+  },
+  {
+    path: '/historyflow',
+    // redirect: '/home',
+    component: () => import('@/views/adminhome/historyFlow'),
   },
   {
     path: '/form',
@@ -127,43 +172,6 @@ export const constantRoutes = [
       }
     ]
   },
-
-  // {
-  //   path: '/example',
-  //   component: Layout,
-  //   redirect: '/example/table',
-  //   name: 'Example',
-  //   meta: { title: '应用管理', icon: 'example' },
-  //   children: [
-  //     {
-  //       path: 'table',
-  //       name: 'Table',
-  //       component: () => import('@/views/table/index'),
-  //       meta: { title: 'Table', icon: 'table' }
-  //     },
-  //     {
-  //       path: 'tree',
-  //       name: 'Tree',
-  //       component: () => import('@/views/tree/index'),
-  //       meta: { title: 'Tree', icon: 'tree' }
-  //     }
-  //   ]
-  // },
-
-  // {
-  //   path: '/form',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       name: 'Form',
-  //       component: () => import('@/views/form/index'),
-  //       meta: { title: '权限管理', icon: 'form' }
-  //     }
-  //   ]
-  // },
-  // 404 page must be placed at the end !!!
-  // { path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () => new Router({

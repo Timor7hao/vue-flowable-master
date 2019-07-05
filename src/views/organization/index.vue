@@ -1,98 +1,8 @@
 <template>
     <el-container id="organization-container">
-        <!-- <el-header>
-            <div class="button-group">
-                <el-button type="primary" size="medium">手工从钉钉同步组织机构</el-button>
-                <el-button size="medium">任务交接</el-button>
-                <el-button size="medium">设置部门经理</el-button>
-            </div>
-        </el-header>
-        <el-container>
-            <el-aside width="250px">
-                <el-input placeholder="搜索场景">
-                    <el-button slot="append" icon="el-icon-search"></el-button>
-                </el-input>
-                <el-menu style="border-right:none">
-                    <el-submenu index="1">
-                        <template slot="title">
-                            <i class="el-icon-location"></i>
-                            <span>导航一</span>
-                        </template>
-                        <el-menu-item index="1-1">选项1</el-menu-item>
-                        <el-menu-item index="1-2">选项2</el-menu-item>
-                    </el-submenu>
-                    <el-table-menu>
-                        场景名称2
-                    </el-table-menu>
-                </el-menu>
-            </el-aside>
-            <el-main>
-                <el-table stripe style="width:100%"  :header-cell-style="tableHeaderColor">
-                    <el-table-column prop="name" label="姓名" width="180" align="center"></el-table-column>
-                    <el-table-column prop="tel" label="手机" width="220" align="center"></el-table-column>
-                    <el-table-column prop="email" label="邮箱" width="220" align="center"></el-table-column>
-                    <el-table-column prop="section" label="所属部门" width="305" align="center"></el-table-column>
-                    <el-table-column prop="methods" label="操作" width="200" align="center"></el-table-column>
-                </el-table>
-            </el-main>
-        </el-container> -->
-        <el-aside width="250px">
-            <el-input placeholder="搜索场景">
-                <el-button slot="append" icon="el-icon-search"></el-button>
-            </el-input>
-            <!-- 显示应用列表 -->
-            <span class="title">全部场景</span>
-            <i class="el-icon-plus" @click="dialogVisible = true"></i>
-            <el-menu :default-active="activeIndex" @select="handleSelect">
-                <el-menu-item v-for="(item,index) in placelist" :key="index" :index="String(index)">
-                    <div class="barstyle"></div>
-                    <i class="el-icon-guide"></i>
-                    <span slot="title">{{item.sceneName}}</span>
-                    <!-- <i class="el-icon-s-tools"></i> -->
-                    <el-dropdown placement="bottom-start" style="width:40px;">
-                        <i class="el-icon-s-tools"></i>
-                        <el-dropdown-menu slot="dropdown" class="el-dropdown-link1">
-                            <el-dropdown-item @click="rename()">重命名</el-dropdown-item>
-                            <el-dropdown-item>删除</el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
-                </el-menu-item>
-            </el-menu>
-            <!-- 对话框 -->
-            <el-dialog
-                title="新建场景"
-                :visible.sync="dialogVisible"
-                width="520px"
-                center>
-                <el-form>
-                    <el-form-item label="场景名称：">
-                        <el-input placeholder="请输入场景名称" v-model="appname" clearable></el-input>
-                    </el-form-item>
-                    <el-form-item label="场景图标：">
-                        <el-select placeholder="请选择场景图标" v-model="value">
-                            <el-card>
-                                <!-- 待完善 -->
-                                <el-pagination small layout="prev, pager, next" :total="50"> </el-pagination>
-                                <el-option style="width:50px;float:left;border: 1px solid #e6edfd" 
-                                    v-for="item in options" 
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value"> 
-                                    <svg-icon style="font-size:24px;" :icon-class="item.value" />
-                                </el-option>
-                            </el-card>
-                        </el-select>
-                    </el-form-item>
-                </el-form>
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click="dialogVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="newApp()">确 定</el-button>
-                </span>
-            </el-dialog>
-        </el-aside>
         <el-main>
-            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" style="padding-left:30%"> 
-                <el-menu-item index="0" @click="placestucture()">场景结构设置</el-menu-item>
+            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" style="padding:20px;"> 
+                <!-- <el-menu-item index="0" @click="placestucture()">场景结构设置</el-menu-item>
                 <el-menu-item index="1" @click="placemember()" style="margin-left:10%">场景成员设置</el-menu-item>
                 <div id="buttongroup1" style="display:block">
                     <el-button type="primary" size="mini" style="float:right;margin-top:12px">保存</el-button>
@@ -101,53 +11,26 @@
                 <div id="buttongroup2" style="display:none">
                     <el-button type="primary" size="mini" style="float:right;margin-top:12px">添加</el-button>
                     <el-button type="danger" size="mini" style="float:right;margin-right:8px;margin-top:12px">批量移除</el-button>
+                </div> -->
+                <el-input placeholder="搜索单位和部门" style="float:left;width:250px;">
+                    <el-button slot="append" icon="el-icon-search"></el-button>
+                </el-input>
+                <div id="buttongroup2">
+                    <el-button type="primary" size="mini" style="float:right;margin-top:12px">同步组织机构树</el-button>
+                    <el-button type="danger" size="mini" style="float:right;margin-right:30px;margin-top:12px">批量移除</el-button>
+                    <el-button type="primary" size="mini" style="float:right;margin-right:20px;margin-top:12px">新增</el-button>
                 </div>
             </el-menu>
-            <el-card id="card1">
-                <span>{{title}}</span>
+            <el-card>
+                <!-- <span>{{title}}</span> -->
                 <el-tree 
                     :props="props"
                     :data="treeData" 
                     @node-click="handleNodeClick"
-                    show-checkbox
                     default-expand-all
                     highlight-current>
                 </el-tree>
             </el-card>
-            <el-card id="card2" style="display:none">
-                <span>{{title}}</span>
-                <el-input placeholder="搜索" style="float:right;width:165px;margin-right:15px;margin-top:10px" size="mini">
-                    <el-button slot="append" icon="el-icon-search" style="width:50px"></el-button>
-                </el-input>
-                <el-table stripe style="width:100%" :data="tableData" :header-cell-style="tableHeaderColor">
-                    <el-table-column prop="name" label="姓名" width="180" align="center"></el-table-column>
-                    <el-table-column prop="tel" label="手机" width="220" align="center"></el-table-column>
-                    <el-table-column prop="email" label="邮箱" width="210" align="center"></el-table-column>
-                    <el-table-column prop="section" label="所属部门" width="305" align="center"></el-table-column>
-                    <el-table-column prop="methods" label="操作" align="center">
-                        <el-button size="mini">设置主部门</el-button>
-                        <el-button size="mini">授权</el-button>
-                    </el-table-column>
-                </el-table>
-                <el-pagination
-                    :page-sizes="[100, 200, 300, 400]"
-                    :page-size="100"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="400">
-                </el-pagination>
-            </el-card>
-            <!-- <div  v-for="(item,index) in roles" :key="index">
-              <el-tree :props="props"
-                       :key="item.id"
-                       :data="treeData"
-                       :default-checked-keys="checkedKeys"
-                       node-key="id"
-                       ref="tree"
-                       show-checkbox
-                       highlight-current
-                       @check-change="handleCheckChange">
-              </el-tree>
-            </div> -->
         </el-main>
     </el-container>
 </template>
@@ -361,105 +244,6 @@ export default {
 <style lang="scss" scoped>
 #organization-container {
     height:92vh;
-    // .el-header {
-    //     .button-group {
-    //         text-align: center;
-    //         margin-top:13px;
-    //     }
-    // }
-    // .el-aside {
-    //     margin-left:10px;
-    //     height:83vh;
-    //     border: 1px solid #e0e0e0;
-    // }
-    .el-aside {
-        // background:#f3f5f8;
-        background: white;
-        box-shadow: 2px 0 5px 0px #e0e5f0;
-        .title {
-            font-size: 16px;
-            color: #304265;
-            margin-left: 24px;
-            line-height: 60px;
-        }
-        .el-icon-plus {
-            background: #409EFF;
-            color: white;
-            font-size: 12px;
-            font-weight: bold;
-            padding: 4px;
-            border-radius: 3px;
-            margin-left: 110px;
-        }
-        .el-menu {
-            // background: #f3f5f8;
-            background: white;
-            border-right: 0px;
-            .svg-icon {
-                margin-left:5px;
-                margin-right:8px;
-                font-size:16px;
-                vertical-align: -0.3em; 
-            }
-            span {
-                line-height: 1.5;
-            }
-            .barstyle {
-                width:3px;
-                background:#409EFF;
-                height:55px;
-                float:left;
-                margin-left:-20px;
-                display:none;
-            }
-            .el-dropdown {
-                float: right;
-                display: none;
-                .el-icon-s-tools {
-                    float:right;
-                    margin-top:21px;
-                    font-size:16px;
-                }
-            }
-        }
-        .el-menu-item:hover { 
-            background: #ecf1f7 !important;
-            .el-dropdown {
-                display: block;
-            }
-            .barstyle {
-                display: block;
-            }
-        }
-        .el-menu-item.is-active {
-            background-color: #ecf1f7 !important;
-            .el-dropdown {
-                display: block;
-            }
-            .barstyle {
-                display: block;
-            }
-        }
-        .el-dialog {
-            .el-form-item {
-                margin-left:35px;
-            }
-            .el-input {
-                margin-left:0px;
-                width:300px;;
-            }
-            .el-select {
-                width:300px;
-                .el-option {
-                    width:20%;
-                    margin:10px;
-                    .svg-icon{
-                        size:70px;
-                    }
-                }
-            }
-        }
-    }
     .el-main {
         // margin-right: 10px;
         // border: 1px solid #e0e0e0;
@@ -468,13 +252,10 @@ export default {
         background-color:rgb(242,245,248);
         .el-card {
             margin-top:20px;
-            height:78vh;
+            height:75vh;
             display: block;
-            .el-pagination {
-                // bottom: 0px;
-                margin-top:50vh;
-                text-align:center;
-            }
+            margin-left:1.5%;
+            margin-right:1.5%;
         }
         .el-menu {
             background-color:rgb(242,245,248);
@@ -485,14 +266,13 @@ export default {
         .el-menu-item.is-active {
             background-color:rgb(242,245,248);
         }
-        span {
-            line-height: 3.5;
-            font-size: 15px;
-            // font-weight: 500;
-            padding-left: 8px;
-            color: #555;
-        }
-        // background: #000;
+        // span {
+        //     line-height: 3.5;
+        //     font-size: 15px;
+        //     // font-weight: 500;
+        //     padding-left: 8px;
+        //     color: #555;
+        // }
     }
     
 }

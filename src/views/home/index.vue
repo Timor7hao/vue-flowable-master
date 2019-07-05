@@ -64,18 +64,18 @@
                 <div class="grid-content bg-purple">
                     <div class="shared-head">
                         <span class="head__title"> 我的流程</span>
-                        <div class="message__more">更多</div>
+                        <div class="message__more">全部</div>
                     </div>
                     <ul class="work-list__content">
-                        <li class="to_do_list">
-                            <div class="todo__title">代办</div>
-                            <span class="todo__count">0</span>
+                        <li class="to_do_list" @click="toMyFlow(0)">
+                            <div class="todo__title">待办</div>
+                            <span class="todo__count">{{myflowlist[0].count}}</span>
                         </li>
-                        <li class="to_do_list">
-                            <div class="todo__title">代阅</div>
-                            <span class="todo__count">0</span>
+                        <li class="to_do_list" @click="toMyFlow(1)">
+                            <div class="todo__title">待阅</div>
+                            <span class="todo__count">{{myflowlist[1].count}}</span>
                         </li>
-                        <li class="to_do_list">
+                        <li class="to_do_list" @click="toMyFlow(2)">
                             <div class="todo__title">我发起的</div>
                             <span class="todo__count">0</span>
                         </li>
@@ -117,13 +117,24 @@ export default {
             appname: '',
             value: '',
             options: options,
+            myflowlist: [{
+                taskType: 0,
+                count: 0,
+            },{
+                taskType: 1,
+                count: 0,
+            },{
+                taskType: 2,
+                count: 0,
+            }],
             // pagesize:4,
             // currentPage:1
         }
     },
     mounted () {
         this.$nextTick( function(){
-            this.getAppList(1)
+            this.getAppList(1);
+            this.myFlowList(1)
         })
     },
     computed: {
@@ -138,7 +149,7 @@ export default {
             // console.log(Params)
             this.$ajax({
                 // url: '/dev-api/application/appList',
-                url:'/dev-api/menu/app/menus',
+                url:'/dev-api/menu/app/menus/e65edc60-96ee-11e9-ac96-005056c00001',
                 method: 'get',
                 contentType: "application/json; charset=utf-8",
                 params: Params
@@ -155,6 +166,23 @@ export default {
                     this.applist.push(obj)
                 }
                 console.log(this.applist)
+            }).catch( error => {
+                console.log()
+            })
+        },
+        //得到我的流程的数据
+        myFlowList() {
+            var Params = {
+                user_id: 'user1'
+            }
+            this.$ajax({
+                url:'/my-api/form/inst/count',
+                method: 'get',
+                contentType: "application/json; charset=utf-8",
+                params: Params
+            }).then( res => {
+                console.log(res.data.obj)
+                this.myflowlist = res.data.obj
             }).catch( error => {
                 console.log()
             })
@@ -205,6 +233,14 @@ export default {
         toDefineHome(){
             this.$router.push({
                 path:'/homedesigner'
+            })
+        },
+        toMyFlow(method) {
+            this.$router.push({
+                path:'/myflow',
+                query: {
+                    method: method,
+                }
             })
         },
         toAppInfomation(id,icon,appname,path) {
